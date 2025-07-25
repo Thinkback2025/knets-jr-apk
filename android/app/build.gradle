@@ -42,7 +42,7 @@ android {
         viewBinding true
     }
     
-    lintOptions {
+    lint {
         abortOnError false
         checkReleaseBuilds false
         disable 'MissingTranslation', 'ExtraTranslation'
