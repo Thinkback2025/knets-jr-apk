@@ -57,7 +57,7 @@
             android:name=".service.ScheduleMonitorService"
             android:enabled="true"
             android:exported="false"
-            android:foregroundServiceType="deviceAdmin" />
+            android:foregroundServiceType="specialUse" />
 
         <!-- Boot Receiver to restart service -->
         <receiver
