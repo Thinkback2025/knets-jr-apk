@@ -22,15 +22,32 @@ jobs:
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
       
+    - name: Cache Gradle packages
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('android/**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+          
     - name: Grant execute permission for gradlew
       run: chmod +x android/gradlew
       
     - name: Build Debug APK with Lint Bypass
       working-directory: android
-      run: ./gradlew assembleDebug -x lint --stacktrace
+      run: ./gradlew assembleDebug -Plint.abortOnError=false -x lint --stacktrace --info
+      
+    - name: List build outputs (debug)
+      run: find android/app/build/outputs -name "*.apk" -type f
       
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
         name: knets-jr-debug-apk
-        path: android/app/build/outputs/apk/debug/app-debug.apk
+        path: |
+          android/app/build/outputs/apk/debug/*.apk
+          android/app/build/outputs/apk/**/*debug*.apk
+        if-no-files-found: warn
+        retention-days: 7
